@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100d18">
+  <title>Golden Reels — Tragaperras demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-shell">
+    <header class="header">
+      <p class="eyebrow">JUEGO DE DEMOSTRACIÓN · SIN DINERO REAL</p>
+      <h1><span class="title-lead" id="game-title-lead">AURA FARMER</span> <span class="title-accent" id="game-title-accent">SUPER SCATTER</span></h1>
+      <p class="subtitle">La suerte está en tus manos</p>
+      <div class="game-picker">
+        <label for="game-selector">MÁQUINA</label>
+        <select id="game-selector"></select>
+      </div>
+    </header>
+
+    <section class="machine" aria-label="Máquina tragaperras">
+      <div class="machine-top">
+        <span class="light light-left" aria-hidden="true"></span>
+        <p>★ &nbsp; SUPER SCATTER &nbsp; ★</p>
+        <span class="light light-right" aria-hidden="true"></span>
+      </div>
+
+      <div class="reels-frame">
+        <div class="payline" aria-hidden="true"></div>
+        <div class="reels" id="reels" role="group" aria-label="Cinco rodillos con tres símbolos cada uno"></div>
+      </div>
+
+      <div class="paytable" id="paytable" aria-label="Tabla de premios">
+        <span>3 iguales <strong>20</strong></span>
+        <span>4 iguales <strong>50</strong></span>
+        <span>5 iguales <strong>150</strong></span>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="Controles y saldo">
+      <div class="credit-panel">
+        <div>
+          <p class="panel-label">TU SALDO</p>
+          <p class="credit-value"><span id="credits">1.000</span> <small>CRÉDITOS</small></p>
+        </div>
+        <div class="bet-info">
+          <p class="panel-label">COSTE POR TIRADA</p>
+          <p class="bet-value"><span id="spin-cost">10</span> <small>CRÉDITOS</small></p>
+        </div>
+      </div>
+
+      <button class="spin-button" id="spin-button" type="button">
+        <span class="button-icon" aria-hidden="true">↻</span>
+        <span>SPIN</span>
+      </button>
+      <p class="result" id="result" role="status" aria-live="polite">Pulsa SPIN para empezar</p>
+      <p class="disclaimer">Créditos ficticios · No hay apuestas ni premios reales</p>
+    </section>
+
+    <p class="storage-message" id="storage-message" role="status" aria-live="polite" hidden></p>
+
+    <section class="info-panel stats-panel" aria-labelledby="stats-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">TU PARTIDA</p>
+          <h2 id="stats-title">Estadísticas</h2>
+        </div>
+        <button class="reset-button" id="reset-button" type="button">Reiniciar partida</button>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card">
+          <p>Total de tiradas</p>
+          <strong id="stat-spins">0</strong>
+        </article>
+        <article class="stat-card">
+          <p>Créditos apostados</p>
+          <strong id="stat-bet">0</strong>
+        </article>
+        <article class="stat-card">
+          <p>Créditos ganados</p>
+          <strong id="stat-won">0</strong>
+        </article>
+        <article class="stat-card">
+          <p>Tiradas premiadas</p>
+          <strong id="stat-winning-spins">0</strong>
+        </article>
+        <article class="stat-card">
+          <p>Mayor premio</p>
+          <strong id="stat-biggest-prize">0</strong>
+        </article>
+        <article class="stat-card">
+          <p>Saldo actual</p>
+          <strong id="stat-balance">1.000</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="info-panel history-panel" aria-labelledby="history-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">TUS ÚLTIMAS JUGADAS</p>
+          <h2 id="history-title">Historial</h2>
+        </div>
+      </div>
+      <div class="history-table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th scope="col">Tirada</th>
+              <th scope="col">Combinación</th>
+              <th scope="col">Apuesta</th>
+              <th scope="col">Premio</th>
+              <th scope="col">Resultado</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
