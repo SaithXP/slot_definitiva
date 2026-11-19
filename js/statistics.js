@@ -114,7 +114,8 @@ export function recordCompletedSpin(state, combinations, bet, prize) {
   const combination = combinations.length === 0
     ? "Sin combinación ganadora"
     : combinations
-      .map(({ row, symbol, count }) => `Fila ${row + 1}: ${count} ${symbol}`)
+      .map(({ row, symbol, count, lineIndex }) =>
+        `${Number.isInteger(lineIndex) ? `Línea ${lineIndex + 1}` : `Fila ${row + 1}`}: ${count} ${symbol}`)
       .join(" · ");
 
   const record = {

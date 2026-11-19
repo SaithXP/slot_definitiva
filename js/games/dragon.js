@@ -5,6 +5,13 @@ export default {
   titleAccent: "TREASURE",
   symbols: ["🐉", "🐲", "🧧", "🏮", "💰", "🌸", "🪙"],
   prizes: { 3: 25, 4: 60, 5: 200 },
+  rules: { lineWins: true },
+  mechanics: {
+    wild: false,
+    scatter: false,
+    multiplier: false,
+    freeSpins: false
+  },
   spinCost: 15,
   initialCredits: 1200,
   colors: {

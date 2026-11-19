@@ -7,6 +7,8 @@ const spinButton = document.querySelector("#spin-button");
 const resultElement = document.querySelector("#result");
 const storageMessageElement = document.querySelector("#storage-message");
 const spinCostElement = document.querySelector("#spin-cost");
+const paylineElement = document.querySelector(".payline");
+const paylinesOverlay = document.querySelector("#paylines-overlay");
 const titleLeadElement = document.querySelector("#game-title-lead");
 const titleAccentElement = document.querySelector("#game-title-accent");
 const paytableElement = document.querySelector("#paytable");
@@ -70,6 +72,38 @@ export function applyGameConfig(gameConfig) {
     item.append(amount);
     paytableElement.append(item);
   }
+
+  renderPaylines(gameConfig.paylines);
+  if (gameConfig.paylines) {
+    const lineInfo = document.createElement("span");
+    lineInfo.className = "payline-info";
+    lineInfo.textContent = `${gameConfig.paylines.length} líneas · ${(gameConfig.spinCost / gameConfig.paylines.length).toLocaleString("es-ES")} créditos por línea`;
+    paytableElement.append(lineInfo);
+    paytableElement.setAttribute("aria-label", `Tabla de premios. ${lineInfo.textContent}`);
+  } else {
+    paytableElement.setAttribute("aria-label", "Tabla de premios");
+  }
+}
+
+function renderPaylines(paylines) {
+  paylinesOverlay.replaceChildren();
+  const hasConfiguredPaylines = Array.isArray(paylines) && paylines.length > 0;
+  paylinesOverlay.hidden = !hasConfiguredPaylines;
+  paylineElement.hidden = hasConfiguredPaylines;
+
+  if (!hasConfiguredPaylines) {
+    return;
+  }
+
+  for (const payline of paylines) {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+    const points = payline
+      .map((row, column) => `${((column + 0.5) / COLUMNS) * 1000},${((row + 0.5) / ROWS) * 600}`)
+      .join(" ");
+    path.setAttribute("points", points);
+    path.classList.add("payline-path");
+    paylinesOverlay.append(path);
+  }
 }
 
 export function populateGameSelector(gameCatalog) {
@@ -115,12 +149,22 @@ export function clearWinningHighlights() {
       cell.classList.remove("winner");
     }
   }
+  for (const path of paylinesOverlay.querySelectorAll(".payline-path")) {
+    path.classList.remove("is-winning");
+  }
 }
 
 export function highlightWinningCombinations(combinations) {
-  for (const { row, count } of combinations) {
-    for (let column = 0; column < count; column += 1) {
-      cells[column][row].classList.add("winner");
+  for (const { row, count, lineIndex, positions } of combinations) {
+    if (positions) {
+      for (const position of positions) {
+        cells[position.column][position.row].classList.add("winner");
+      }
+      paylinesOverlay.querySelectorAll(".payline-path")[lineIndex]?.classList.add("is-winning");
+    } else {
+      for (let column = 0; column < count; column += 1) {
+        cells[column][row].classList.add("winner");
+      }
     }
   }
 }

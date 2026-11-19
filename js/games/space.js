@@ -5,6 +5,25 @@ export default {
   titleAccent: "ODYSSEY",
   symbols: ["🚀", "🪐", "🌙", "⭐", "👽", "🛸", "☄️"],
   prizes: { 3: 30, 4: 70, 5: 250 },
+  rules: { lineWins: true },
+  paylines: [
+    [1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0],
+    [2, 2, 2, 2, 2],
+    [0, 1, 2, 1, 0],
+    [2, 1, 0, 1, 2],
+    [0, 0, 1, 2, 2],
+    [2, 2, 1, 0, 0],
+    [1, 0, 0, 0, 1],
+    [1, 2, 2, 2, 1],
+    [0, 1, 0, 1, 0]
+  ],
+  mechanics: {
+    wild: false,
+    scatter: false,
+    multiplier: false,
+    freeSpins: false
+  },
   spinCost: 20,
   initialCredits: 1500,
   colors: {

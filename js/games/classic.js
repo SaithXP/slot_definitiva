@@ -5,6 +5,13 @@ export default {
   titleAccent: "SUPER SCATTER",
   symbols: ["🍒", "🍋", "🍉", "🔔", "⭐", "💎", "7️⃣"],
   prizes: { 3: 20, 4: 50, 5: 150 },
+  rules: { lineWins: true },
+  mechanics: {
+    wild: false,
+    scatter: false,
+    multiplier: false,
+    freeSpins: false
+  },
   spinCost: 10,
   initialCredits: 1000,
   colors: {

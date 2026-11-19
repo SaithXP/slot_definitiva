@@ -1,6 +1,9 @@
 import classicGame from "./games/classic.js";
 import dragonGame from "./games/dragon.js";
 import spaceGame from "./games/space.js";
+import { isCombinationRuleRegistered } from "./combinationEvaluator.js";
+import { isMechanicRegistered } from "./mechanics.js";
+import { COLUMNS, ROWS } from "./config.js";
 
 const configuredGames = [
   { id: classicGame && classicGame.id, label: "Classic", config: classicGame },
@@ -59,11 +62,60 @@ export function getConfigurationError(entry) {
     return "coste o saldo inicial no válidos";
   }
 
+  if (config.paylines !== undefined) {
+    if (
+      !Array.isArray(config.paylines) ||
+      config.paylines.length === 0 ||
+      config.spinCost % config.paylines.length !== 0
+    ) {
+      return "las líneas de pago deben ser válidas y dividir el coste de tirada";
+    }
+
+    const uniquePaylines = new Set();
+    for (const payline of config.paylines) {
+      if (
+        !Array.isArray(payline) ||
+        payline.length !== COLUMNS ||
+        payline.some((row) => !Number.isInteger(row) || row < 0 || row >= ROWS)
+      ) {
+        return `cada línea de pago debe definir ${COLUMNS} filas válidas`;
+      }
+      const key = payline.join(",");
+      if (uniquePaylines.has(key)) {
+        return "las líneas de pago no pueden estar duplicadas";
+      }
+      uniquePaylines.add(key);
+    }
+  }
+
   if (
     !config.prizes ||
     [3, 4, 5].some((count) => !Number.isSafeInteger(config.prizes[count]) || config.prizes[count] < 0)
   ) {
     return "la tabla de premios debe definir importes válidos para 3, 4 y 5 símbolos";
+  }
+
+  const rules = config.rules ?? { lineWins: true };
+  if (!rules || typeof rules !== "object" || Array.isArray(rules)) {
+    return "las reglas deben ser un objeto";
+  }
+  for (const [name, enabled] of Object.entries(rules)) {
+    if (typeof enabled !== "boolean" || (enabled && !isCombinationRuleRegistered(name))) {
+      return `la regla "${name}" no es válida o no está registrada`;
+    }
+  }
+
+  const mechanics = config.mechanics ?? {};
+  if (typeof mechanics !== "object" || Array.isArray(mechanics)) {
+    return "las mecánicas deben ser un objeto";
+  }
+  for (const [name, settings] of Object.entries(mechanics)) {
+    const validSettings = typeof settings === "boolean" ||
+      (settings && typeof settings === "object" && !Array.isArray(settings) && typeof settings.enabled === "boolean");
+    const enabled = settings === true || (settings && typeof settings === "object" && settings.enabled === true);
+    if (!validSettings || (enabled && !isMechanicRegistered(name))) {
+      return `la mecánica "${name}" no es válida o no está registrada`;
+    }
   }
 
   if (

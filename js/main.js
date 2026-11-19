@@ -1,7 +1,6 @@
 import {
-  calculatePrize,
-  checkWinningCombinations,
-  createRandomGrid
+  createRandomGrid,
+  evaluateSpin
 } from "./slotEngine.js";
 import {
   clearWinningHighlights,
@@ -83,11 +82,15 @@ async function executeSpin() {
   const finalGrid = createRandomGrid(activeGame);
   await stopReels(finalGrid, activeGame);
 
-  const combinations = checkWinningCombinations(finalGrid);
-  const prize = calculatePrize(combinations, activeGame.prizes);
-  highlightWinningCombinations(combinations);
-  gameState = recordCompletedSpin(gameState, combinations, activeGame.spinCost, prize);
-  showResult(combinations, prize);
+  const spinResult = evaluateSpin(finalGrid, activeGame);
+  highlightWinningCombinations(spinResult.combinations);
+  gameState = recordCompletedSpin(
+    gameState,
+    spinResult.combinations,
+    activeGame.spinCost,
+    spinResult.prize
+  );
+  showResult(spinResult.combinations, spinResult.prize);
 
   isSpinning = false;
   refreshGameState();

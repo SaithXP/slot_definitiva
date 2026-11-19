@@ -1,4 +1,9 @@
 import { COLUMNS, ROWS } from "./config.js";
+import { evaluateCombinations } from "./combinationEvaluator.js";
+import { applyMechanics } from "./mechanics.js";
+import { calculatePrize } from "./prizeCalculator.js";
+
+export { calculatePrize } from "./prizeCalculator.js";
 
 // Devuelve un símbolo aleatorio de la colección disponible.
 export function generateRandomSymbol(gameConfig) {
@@ -12,26 +17,22 @@ export function createRandomGrid(gameConfig) {
   );
 }
 
-// Cuenta las coincidencias consecutivas desde el primer rodillo de cada fila.
-export function checkWinningCombinations(grid) {
-  const combinations = [];
-
-  for (let row = 0; row < ROWS; row += 1) {
-    const symbol = grid[0][row];
-    let count = 1;
-
-    while (count < COLUMNS && grid[count][row] === symbol) {
-      count += 1;
-    }
-
-    if (count >= 3) {
-      combinations.push({ row, symbol, count });
-    }
-  }
-
-  return combinations;
+// Kept as a compatibility export for existing callers.
+export function checkWinningCombinations(grid, rules) {
+  return evaluateCombinations(grid, rules);
 }
 
-export function calculatePrize(combinations, prizeTable) {
-  return combinations.reduce((total, combination) => total + prizeTable[combination.count], 0);
+export function evaluateSpin(grid, gameConfig) {
+  const combinations = evaluateCombinations(grid, gameConfig.rules, {
+    paylines: gameConfig.paylines
+  });
+  const basePrize = calculatePrize(combinations, gameConfig.prizes);
+
+  return applyMechanics({
+    grid,
+    combinations,
+    basePrize,
+    prize: basePrize,
+    effects: []
+  }, gameConfig.mechanics);
 }
